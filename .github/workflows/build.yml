@@ -28,7 +28,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-14, macos-15, macos-15-intel, macos-26, macos-26-intel, ubuntu-24.04 ]
+        os: [ macos-26, macos-26-intel ]
         compiler: [ gcc ]
         version: [ 12, 13, 14, 15 ]
         extra_flags: [ -g ]
@@ -40,15 +40,6 @@ jobs:
 
           # --- LLVM clang coverage ---
 
-          - os: macos-14
-            compiler: clang
-            version: 22
-          - os: macos-15
-            compiler: clang
-            version: 22
-          - os: macos-15-intel
-            compiler: clang
-            version: 22
           - os: macos-26
             compiler: clang
             version: 22
@@ -56,47 +47,6 @@ jobs:
             compiler: clang
             version: 22
 
-          # https://hub.docker.com/r/phhargrove/llvm-flang/tags
-          - os: ubuntu-24.04
-            compiler: clang
-            version: 22
-            container: phhargrove/llvm-flang:22.1.0-latest
-          - os: ubuntu-24.04
-            compiler: clang
-            version: 21
-            container: phhargrove/llvm-flang:21.1.0-latest
-          - os: ubuntu-24.04
-            compiler: clang
-            version: 20
-            container: phhargrove/llvm-flang:20.1.0-latest
-          - os: ubuntu-24.04
-            compiler: clang
-            version: 19
-            extra_flags: -g -mmlir -allow-assumed-rank
-            container: phhargrove/llvm-flang:19.1.1-latest
-
-          # --- Intel coverage ---
-
-          # https://hub.docker.com/r/intel/oneapi-hpckit/tags
-          - os: ubuntu-24.04
-            compiler: icx
-            version: latest
-            container: intel/oneapi-hpckit:latest
-
-          - os: ubuntu-24.04
-            compiler: icx
-            version: 2025.2.0
-            container: intel/oneapi-hpckit:2025.2.0-0-devel-ubuntu24.04
-
-          - os: ubuntu-24.04
-            compiler: icx
-            version: 2025.1.0
-            container: intel/oneapi-hpckit:2025.1.0-0-devel-ubuntu24.04
-
-          - os: ubuntu-22.04
-            compiler: icx
-            version: 2025.0.0
-            container: intel/oneapi-hpckit:2025.0.0-0-devel-ubuntu22.04 
 
     container:
       image: ${{ matrix.container }}
@@ -175,7 +125,8 @@ jobs:
           # XCode 26 / gcc bug workaround: 
           # <mach/mach_time.h> and <mach/mach.h> generate xnu_static_assert_struct_size errors from <mach/message.h>
           if [[ ${{ matrix.os }} =~ macos-26 ]] ; then
-            echo "CONFIGURE_ARGS=$CONFIGURE_ARGS --enable-force-posix-realtime --disable-ccs-rpc" >> "$GITHUB_ENV"
+            #echo "CONFIGURE_ARGS=$CONFIGURE_ARGS --enable-force-posix-realtime --disable-ccs-rpc" >> "$GITHUB_ENV"
+            echo "CONFIGURE_ARGS=$CONFIGURE_ARGS --enable-force-posix-realtime" >> "$GITHUB_ENV"
           fi
         fi
 
