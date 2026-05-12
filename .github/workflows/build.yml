@@ -1,5 +1,5 @@
 name: Smoke Test
-run-name: ${{ inputs.run_name && 'Manual:' }} ${{ inputs.run_name }}
+run-name: ${{ github.event_name == 'workflow_dispatch' && 'Manual:' || '' }} ${{ inputs.run_name }}
 
 on: 
   push:
